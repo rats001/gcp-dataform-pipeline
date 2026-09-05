@@ -1,0 +1,6 @@
+# workflow_settings.yaml
+# 💡 PRO TIP: Configures the core connection keys for Dataform inside GCP
+dataformCoreVersion: 3.0.0
+defaultProject: "project-c5ee458c-b77c-46dd-98b"
+defaultDataset: "dev_env"
+defaultLocation: "us-central1"
