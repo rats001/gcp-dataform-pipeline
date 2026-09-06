@@ -1,0 +1,19 @@
+config {
+  type: "table",
+  name: "fct_transactions",
+  description: "Cleaned and optimized core production transaction data",
+  bigquery: {
+    partitionBy: "DATE(processed_at)", // 📅 Optimized slicing by date for performance
+    clusterBy: ["user_id"]              // 🔍 Optimized sorting by user ID for rapid filtering
+  }
+}
+
+-- 💡 The actual transformation and cleaning logic goes below the config block
+SELECT 
+  id AS transaction_id,
+  user_id,
+  SAFE_CAST(amount AS NUMERIC) AS clean_amount,  -- Prevents pipeline crashes by safe casting numeric data
+  LOWER(status) AS normalized_status,            -- Normalizes transaction status strings to lowercase
+  CURRENT_TIMESTAMP() AS processed_at
+FROM ${ref("stag_raw_transaction")}              -- 💡 PRO TIP: Natively reads from your declared Airflow staging table
+WHERE id IS NOT NULL
