@@ -1,10 +1,14 @@
 config {
-  type: "table",
+  type: "incremental",
   name: "fct_transactions",
   description: "Cleaned and optimized core production transaction data",
   bigquery: {
     partitionBy: "DATE(processed_at)", // 📅 Optimized slicing by date for performance
     clusterBy: ["user_id"]              // 🔍 Optimized sorting by user ID for rapid filtering
+  },
+  assertions:{
+    uniqueKey:["transaction_id"],
+    nonNull:["transaction_id","user_id"]
   }
 }
 
@@ -17,3 +21,6 @@ SELECT
   CURRENT_TIMESTAMP() AS processed_at
 FROM ${ref("stag_raw_transaction")}              -- 💡 PRO TIP: Natively reads from your declared Airflow staging table
 WHERE id IS NOT NULL
+
+-- incremental engine trigger here
+${when(incremental(), `AND CURRENT_TIMESTAMP() > (SELECT MAX(processed_at) FROM ${self()})`) }
