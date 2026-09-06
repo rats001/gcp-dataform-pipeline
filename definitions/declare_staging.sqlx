@@ -1,4 +1,6 @@
-dataformCoreVersion: 3.0.0
-defaultProject: "projectgcp1"  # 👈 Paste your exact project ID here
-defaultDataset: "dev_env"
-defaultLocation: "us-central1"
+config {
+    type: "declaration",
+    database: "project-c5ee458c-b77c-46dd-98b",
+    schema: "dev_env",
+    name: "stag_raw_transaction"
+}
